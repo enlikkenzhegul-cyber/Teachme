@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="kk">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Карточканы өңдеу · Teach Me</title>
+    <style>
+        :root {
+            --bg-1: #0f172a;
+            --bg-2: #1e1b4b;
+            --card: #ffffff;
+            --ink: #0f172a;
+            --muted: #64748b;
+            --accent: #6366f1;
+            --accent-2: #8b5cf6;
+            --accent-soft: #eef2ff;
+            --border: #e2e8f0;
+            --error: #dc2626;
+            --info-soft: #eff6ff;
+            --info-border: #bfdbfe;
+            --info-ink: #1d4ed8;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body { height: 100%; }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(1200px 600px at 10% -10%, #4338ca55, transparent 60%),
+                radial-gradient(900px 500px at 110% 10%, #db277755, transparent 55%),
+                linear-gradient(135deg, var(--bg-1), var(--bg-2));
+            min-height: 100%;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 48px 20px;
+        }
+
+        .shell {
+            width: 100%;
+            max-width: 720px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            color: #e2e8f0;
+        }
+
+        .brand-mark {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            display: grid;
+            place-items: center;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.5px;
+            box-shadow: 0 10px 25px -10px #6366f1aa;
+        }
+
+        .brand-name {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.2px;
+        }
+
+        .brand-sub {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-top: 2px;
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow:
+                0 1px 0 #ffffff inset,
+                0 30px 60px -25px #00000088,
+                0 12px 24px -12px #00000055;
+        }
+
+        .back {
+            display: inline-block;
+            font-size: 13.5px;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .back:hover { text-decoration: underline; }
+
+        .back:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 3px;
+            border-radius: 6px;
+        }
+
+        h1 {
+            margin: 0 0 6px;
+            font-size: 24px;
+            letter-spacing: -0.4px;
+        }
+
+        .lead {
+            margin: 0 0 18px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .field { margin-bottom: 18px; }
+
+        .field label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 8px;
+            letter-spacing: 0.2px;
+        }
+
+        .field input[type="text"],
+        .field textarea {
+            width: 100%;
+            font: inherit;
+            font-size: 15px;
+            color: var(--ink);
+            background: #f8fafc;
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 14px;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+            outline: none;
+        }
+
+        .field input[type="text"]:hover,
+        .field textarea:hover {
+            border-color: #cbd5e1;
+        }
+
+        .field input[type="text"]:focus,
+        .field textarea:focus {
+            background: #fff;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px #6366f122;
+        }
+
+        .field textarea {
+            resize: vertical;
+            min-height: 120px;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .errors {
+            margin: 8px 0 0;
+            padding: 0;
+            list-style: none;
+            color: var(--error);
+            font-size: 13px;
+        }
+
+        .errors li {
+            padding: 6px 10px;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            margin-top: 6px;
+        }
+
+        .non-field-errors {
+            margin: 0 0 18px;
+            padding: 0;
+            list-style: none;
+        }
+
+        .non-field-errors li {
+            padding: 10px 14px;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 10px;
+            color: var(--error);
+            font-size: 13.5px;
+        }
+
+        .source-text {
+            margin: 0 0 22px;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 4px 4px 2px;
+        }
+
+        .source-text > summary {
+            cursor: pointer;
+            list-style: none;
+            padding: 10px 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            user-select: none;
+            border-radius: 9px;
+        }
+
+        .source-text > summary::-webkit-details-marker { display: none; }
+        .source-text > summary::marker { content: ""; }
+
+        .source-text > summary::before {
+            content: "▸";
+            display: inline-block;
+            margin-right: 8px;
+            color: var(--accent);
+            transition: transform 0.15s ease;
+        }
+
+        .source-text[open] > summary::before {
+            transform: rotate(90deg);
+        }
+
+        .source-text > summary:hover { background: #ffffff; }
+
+        .source-text > summary:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 3px;
+        }
+
+        .source-text-body {
+            padding: 0 14px 12px;
+            color: #1e293b;
+            font-size: 13.5px;
+            line-height: 1.6;
+            font-family: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+            word-break: break-word;
+        }
+
+        .info {
+            margin: 0 0 18px;
+            padding: 12px 14px;
+            background: var(--info-soft);
+            border: 1px solid var(--info-border);
+            border-radius: 12px;
+            color: var(--info-ink);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-top: 22px;
+            flex-wrap: wrap;
+        }
+
+        .submit {
+            appearance: none;
+            border: 0;
+            cursor: pointer;
+            font: inherit;
+            font-weight: 700;
+            font-size: 15px;
+            color: #fff;
+            padding: 13px 22px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            box-shadow: 0 12px 24px -10px #6366f1cc, 0 2px 0 #4f46e5 inset;
+            transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+        }
+
+        .submit:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.05);
+            box-shadow: 0 16px 30px -12px #6366f1cc, 0 2px 0 #4f46e5 inset;
+        }
+
+        .submit:active {
+            transform: translateY(0);
+            box-shadow: 0 6px 14px -8px #6366f1cc, 0 2px 0 #4f46e5 inset;
+        }
+
+        .cancel {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--muted);
+            text-decoration: none;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1.5px solid transparent;
+        }
+
+        .cancel:hover {
+            background: #f1f5f9;
+            color: #334155;
+            text-decoration: underline;
+        }
+
+        .cancel:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 3px;
+        }
+
+        @media (max-width: 520px) {
+            body { padding: 24px 12px; }
+            .card { padding: 20px; border-radius: 16px; }
+            h1 { font-size: 22px; }
+        }
+    </style>
+</head>
+<body>
+    <main class="shell">
+        <div class="brand">
+            <div class="brand-mark">T</div>
+            <div>
+                <div class="brand-name">Teach Me</div>
+                <div class="brand-sub">Оқу мәтінінен карточкалар</div>
+            </div>
+        </div>
+
+        <section class="card">
+            <a class="back" href="{% url 'source_detail' pk=card.source_id %}">← {{ card.source.title }}</a>
+
+            <h1>Карточканы өңдеу</h1>
+            <p class="lead">
+                Сұрақ, жауап және дәйексөзді өңдеңіз. Дәйексөз бастапқы мәтіннен дәл үзінді болуы шарт.
+            </p>
+
+            <details class="source-text">
+                <summary>Салыстыруға бастапқы мәтін</summary>
+                <div class="source-text-body">{{ card.source.text|linebreaksbr }}</div>
+            </details>
+
+            <p class="info">
+                Сақтаған соң карточка «Тексеру керек» күйіне өтеді — дәйексөз бен жауапты қайта
+                тексеру қажет болады.
+            </p>
+
+            <form method="post" novalidate>
+                {% csrf_token %}
+
+                {{ form.non_field_errors }}
+
+                <div class="field">
+                    {{ form.question.label_tag }}
+                    {{ form.question }}
+                    {{ form.question.errors }}
+                </div>
+
+                <div class="field">
+                    {{ form.answer.label_tag }}
+                    {{ form.answer }}
+                    {{ form.answer.errors }}
+                </div>
+
+                <div class="field">
+                    {{ form.source_quote.label_tag }}
+                    {{ form.source_quote }}
+                    {{ form.source_quote.errors }}
+                </div>
+
+                <div class="actions">
+                    <button type="submit" class="submit">Сақтау</button>
+                    <a class="cancel" href="{% url 'source_detail' pk=card.source_id %}">Бас тарту</a>
+                </div>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

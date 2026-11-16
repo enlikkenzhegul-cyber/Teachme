@@ -119,7 +119,7 @@ class HomeFlowTests(TestCase):
             position=1,
             question="Q?",
             answer="A.",
-            source_quote="A.",
+            source_quote=DEMO_CARDS[0]["source_quote"],
         )
 
         url = reverse("source_detail", kwargs={"pk": source.pk})
@@ -134,3 +134,33 @@ class HomeFlowTests(TestCase):
         mock_generate.assert_not_called()
         self.assertEqual(Source.objects.count(), before_sources)
         self.assertEqual(Flashcard.objects.count(), before_cards)
+
+    def test_detail_card_summaries_match_visible_cards(self):
+        source = Source.objects.create(
+            title="X",
+            text=DEMO_TEXT,
+            generation_mode="demo",
+        )
+        for index, card_data in enumerate(DEMO_CARDS, start=1):
+            Flashcard.objects.create(
+                source=source,
+                position=index,
+                question=card_data["question"],
+                answer=card_data["answer"],
+                source_quote=card_data["source_quote"],
+                is_verified=(index == 1),
+            )
+
+        base = reverse("source_detail", kwargs={"pk": source.pk})
+
+        response_all = self.client.get(base)
+        content_all = response_all.content.decode()
+        self.assertEqual(content_all.count("Жауапты көрсету"), 3)
+
+        response_pending = self.client.get(base + "?status=pending")
+        content_pending = response_pending.content.decode()
+        self.assertEqual(content_pending.count("Жауапты көрсету"), 2)
+
+        response_verified = self.client.get(base + "?status=verified")
+        content_verified = response_verified.content.decode()
+        self.assertEqual(content_verified.count("Жауапты көрсету"), 1)
